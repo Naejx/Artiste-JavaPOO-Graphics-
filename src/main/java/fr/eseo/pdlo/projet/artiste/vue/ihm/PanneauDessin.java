@@ -1,5 +1,6 @@
 package fr.eseo.pdlo.projet.artiste.vue.ihm;
 import fr.eseo.pdlo.projet.artiste.vue.formes.VueForme;
+import fr.eseo.pdlo.projet.artiste.controleur.outils.Outil;
 import java.util.ArrayList;
 import java.util.List;
 public class PanneauDessin extends javax.swing.JPanel {
@@ -8,6 +9,7 @@ public class PanneauDessin extends javax.swing.JPanel {
     java.awt.Color COULEUR_FOND_PAR_DEFAUT = java.awt.Color.WHITE;
     VueForme forme;
     private final List<VueForme> vueFormes;
+    private Outil outilCourant;
 
     public PanneauDessin() {
         javax.swing.JFrame frame = new javax.swing.JFrame("Panneau de Dessin");
@@ -30,7 +32,6 @@ public class PanneauDessin extends javax.swing.JPanel {
     }
 
     void getVueForme() {
-        this.forme = forme;
     }
 
     public List<VueForme> getVueFormes() {
@@ -51,5 +52,28 @@ public class PanneauDessin extends javax.swing.JPanel {
         }
 
         g2D.dispose();
+    }
+
+    public void associerOutil(Outil outil) {
+        if (this.outilCourant != null) {
+            this.dissocierOutil();
+        }
+        this.outilCourant = outil;
+        this.outilCourant.setPanneauDessin(this);
+        this.addMouseListener(outil);
+        this.addMouseMotionListener(outil);
+    }
+
+    public void dissocierOutil() {
+        if (this.outilCourant != null) {
+            this.removeMouseListener(this.outilCourant);
+            this.removeMouseMotionListener(this.outilCourant);
+            this.outilCourant.setPanneauDessin(null);
+            this.outilCourant = null;
+        }
+    }
+
+    public Outil getOutilCourant() {
+        return this.outilCourant;
     }
 }
